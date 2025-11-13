@@ -1,0 +1,14 @@
+# Ground Truth for Bhagavad Gita Verses
+# Format: image_filename,word1,word2,word3,...
+# Generated from sanskritdocuments.org ITRANS files
+
+gita_1_1.jpg,dhR^itarAShTra,uvAcha,dharmakShetre,kurukShetre,samavetA,yuyutsavaH,mAmakAH,pANDavAshchaiva,kimakurvata,sa~njaya
+gita_1_2.jpg,sa~njaya,uvAcha,dR^iShTvA,tu,pANDavAnIkaM,vyUDhaM,duryodhanastadA,AchAryamupasa~Ngamya,rAjA,vachanamabravIt
+gita_1_3.jpg,dR^iShTvA,tu,pANDavAnIkaM,vyUDhaM,duryodhanastadA,pashyaitAM,pANDuputrANAmAchArya,mahatI.n,chamUm,vyUDhAM,drupadaputreNa,tava,shiShyeNa,dhImatA
+gita_1_4.jpg,pashyaitAM,pANDuputrANAmAchArya,mahatI.n,chamUm,atra,shUrA,maheShvAsA,bhImArjunasamA,yudhi,yuyudhAno,virATashcha,drupadashcha,mahArathaH
+gita_1_5.jpg,atra,shUrA,maheShvAsA,bhImArjunasamA,yudhi,dhR^iShTaketushchekitAnaH,kAshirAjashcha,vIryavAn,purujitkuntibhojashcha,shaibyashcha,narapu~NgavaH
+gita_1_6.jpg,dhR^iShTaketushchekitAnaH,kAshirAjashcha,vIryavAn,yudhAmanyushcha,vikrAnta,uttamaujAshcha,vIryavAn,saubhadro,draupadeyAshcha,sarva,eva,mahArathAH
+gita_1_7.jpg,yudhAmanyushcha,vikrAnta,uttamaujAshcha,vIryavAn,asmAkaM,tu,vishiShTA,ye,tAnnibodha,dvijottama,nAyakA,mama,sainyasya,sa.nj~nArthaM,tAnbravImi,te
+gita_1_8.jpg,asmAkaM,tu,vishiShTA,ye,tAnnibodha,dvijottama,bhavAnbhIShmashcha,karNashcha,kR^ipashcha,samiti~njayaH,ashvatthAmA,vikarNashcha,saumadattistathaiva,cha
+gita_1_9.jpg,anye,cha,bahavaH,shUrA,madarthe,tyaktajIvitAH,nAnAshastrapraharaNAH,sarve,yuddhavishAradAH
+gita_1_10.jpg,anye,cha,bahavaH,shUrA,madarthe,tyaktajIvitAH,aparyAptaM,tadasmAkaM,balaM,bhIShmAbhirakShitam,paryApta.n,tvidameteShAM,balaM,bhImAbhirakShitam

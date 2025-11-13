@@ -4,16 +4,16 @@
 
 ## Note: the imported classifier is by Anupam, please contact him for more querries
 
-from keras.models import Sequential
-from keras.layers import Conv2D
-from keras.layers import MaxPooling2D
-from keras.layers import Flatten
-from keras.layers import Dense
-from keras.models import model_from_json
-from keras import optimizers
-from keras.preprocessing import image
-from keras.utils import plot_model
-from keras.preprocessing.image import ImageDataGenerator
+from tf_keras.models import Sequential
+from tf_keras.layers import Conv2D
+from tf_keras.layers import MaxPooling2D
+from tf_keras.layers import Flatten
+from tf_keras.layers import Dense
+from tf_keras.models import model_from_json
+from tf_keras import optimizers
+from tf_keras.preprocessing import image
+from tf_keras.utils import plot_model
+from tf_keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 import os
 import pandas as pd
@@ -34,7 +34,9 @@ class OCRclassifier:
 
 	def classify(self, x_test):
 		x_test = x_test/255.0
-		result = self.model.predict_classes(x_test)
+		# predict_classes is deprecated, use predict + argmax instead
+		predictions = self.model.predict(x_test, verbose=0)
+		result = np.argmax(predictions, axis=1)
 		result_itrans = []
 		# Converting to english labels using dict	
 		for index in result: 

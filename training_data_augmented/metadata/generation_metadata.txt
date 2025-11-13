@@ -1,0 +1,12 @@
+======================================================================
+TRAINING DATA GENERATION METADATA
+======================================================================
+
+Verse ID: 6
+  Image: ./verses/6.jpg
+  Words segmented: 15
+  Letters segmented: 48
+  Letters saved: 31
+  Letters skipped: 0
+  Ground truth: dhRRitaraaShTra, uvaaca, dharmakShetre, kurukShetre, samavetaa, yuyutsavaH, maamakaaH, paaNDavaashchaiva, kimakurvata, sa~njaya
+

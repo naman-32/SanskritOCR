@@ -1,0 +1,22 @@
+======================================================================
+SANSKRIT OCR - WER EVALUATION RESULTS
+======================================================================
+
+Total images: 1
+Total ground truth words: 10
+Total extracted words: 15
+
+WITHOUT Lexical Correction:
+  WER: 150.00%
+  Accuracy: 0.00%
+  Errors: 15
+
+WITH Lexical Correction:
+  WER: 150.00%
+  Accuracy: 0.00%
+  Errors: 15
+
+Improvement:
+  WER Reduction: 0.00 percentage points
+  Accuracy Improvement: 0.00 percentage points
+  Errors Fixed: 0

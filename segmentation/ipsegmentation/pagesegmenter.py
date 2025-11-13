@@ -38,10 +38,10 @@ class word_finder:
 		
 		#print("obtaining lines")
 		y = 0
-		while y < len(line_count_matrix) - 1 :
+		while y < len(line_count_matrix):
 			if line_count_matrix[y] > 30:
 				line_matrix.append(y)
-				for y2 in range(y + 3, len(line_count_matrix) - 1):
+				for y2 in range(y + 3, len(line_count_matrix)):
 					if line_count_matrix[y2] < 8:
 						line_matrix.append(y2)
 						y = y2
@@ -65,7 +65,7 @@ class word_finder:
 		#print("count for words has been obtained")		
 		self.x_count_matrix = x_count_matrix	
 		#print(len(x_count_matrix[0]))
-		for y in range(0,len(x_count_matrix)-1):
+		for y in range(0,len(x_count_matrix)):
 			word_matrix.append([])
 			#word_matrix[y].append(l_limit)
 			x = 0
@@ -82,7 +82,7 @@ class word_finder:
 		self.word_matrix = word_matrix 	
 		word_array = []
 		
-		for y in range(0,len(self.line_matrix)-2,2):
+		for y in range(0,len(self.line_matrix)-1,2):
 			for x in range(1,len(self.word_matrix[y//2])-2,2):
 				if self.word_matrix[y//2][x+1] - self.word_matrix[y//2][x] > 4: #change 4 to a smaller number to include punctuations.
 					word_array.append(self.word_matrix[y//2][x] - 3)
@@ -109,20 +109,26 @@ class word_finder:
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
 
-	def store_words(self,no_words):
+	def store_words(self,no_words, words_dir='./tmp_words'):
 		print('storing words.....')
 		for i in range(0,len(self.word_array),4):
 			cropped = self.img_color[self.word_array[i+1]:self.word_array[i+3],self.word_array[i]:self.word_array[i+2]]
-			cv2.imwrite('words/'+str(no_words + i//4)+'.png',cropped)
+			cv2.imwrite(words_dir + '/' + str(no_words + i//4)+'.png',cropped)
 		#print('words have been stored ......')
 
 ################################ HANDLER FUNCTIONS FOR WORDS #########################################
-	def segment_page_into_words(self):
-		self.find_words(20,self.cols//2)
-		self.store_words(0)
-		no_words = len(os.listdir('./words'))		
-		self.find_words(self.cols//2,self.cols)
-		self.store_words(no_words)		
+	def segment_page_into_words(self, words_dir='./tmp_words', two_column_layout=False):
+		if two_column_layout:
+			# Two column layout: process left and right halves separately
+			self.find_words(0, self.cols//2)
+			self.store_words(0, words_dir)
+			no_words = len(os.listdir(words_dir))		
+			self.find_words(self.cols//2, self.cols)
+			self.store_words(no_words, words_dir)
+		else:
+			# Single column layout: process entire width
+			self.find_words(0, self.cols)
+			self.store_words(0, words_dir)		
 
 #############################################################################################
 
@@ -225,19 +231,19 @@ class letter_finder:
 		plt.plot(x,self.count_matrix)
 		plt.show()	
 	
-	def crop_letters(self,word_index):
+	def crop_letters(self,word_index, letters_dir='./tmp_letters'):
 		for x in range(0,len(self.letter_matrix)-1):
 			letter = self.img[0:self.rows , self.letter_matrix[x]:self.letter_matrix[x+1]]
 			letter = cv2.resize(letter,(0,0),fx=0.2,fy=0.2)
-			cv2.imwrite('letters/' +str(word_index) + str(x)+'.png',letter)
+			cv2.imwrite(letters_dir + '/' + str(word_index) + '-' + str(x)+'.png',letter)
 		
 		#print('letters have been stored...')	
 
-	def store_cropped_letters(self,word_index):
+	def store_cropped_letters(self,word_index, letters_dir='./tmp_letters'):
 		y = self.find_line()
 		self.remove_line(y)
 		self.find_letters(0,0,self.cols,self.final_image.shape[0])
-		self.crop_letters(word_index)
+		self.crop_letters(word_index, letters_dir)
 		#self.show_letters()
 		#self.show_image()
 
@@ -250,19 +256,24 @@ class pagesegmenter:
 	def __init__(self,img):
 		self.img = img		
 
-	def get_word_coordinates(self):
+	def get_word_coordinates(self, two_column_layout=False, words_dir='./tmp_words'):
 		# This functions returns an nx1x4 array of co-ordinates of the letters
 		pagesegmenter = word_finder(self.img)
-		pagesegmenter.find_words(20,pagesegmenter.cols//2)
-		word_coordinates_array = pagesegmenter.word_array
-		#pagesegmenter.show_words()
-		pagesegmenter.store_words(0)
-		pagesegmenter.find_words(pagesegmenter.cols//2, pagesegmenter.cols)
-		#pagesegmenter.show_words()
-		#pagesegmenter.show_image()
-		tmp = len(os.listdir('./words'))
-		pagesegmenter.store_words(tmp)
-		word_coordinates_array += pagesegmenter.word_array
+		
+		if two_column_layout:
+			# Two column layout: process left and right halves separately
+			pagesegmenter.find_words(0, pagesegmenter.cols//2)
+			word_coordinates_array = pagesegmenter.word_array
+			pagesegmenter.store_words(0, words_dir)
+			no_words = len([f for f in os.listdir(words_dir) if f.endswith('.png')])
+			pagesegmenter.find_words(pagesegmenter.cols//2, pagesegmenter.cols)
+			pagesegmenter.store_words(no_words, words_dir)
+			word_coordinates_array += pagesegmenter.word_array
+		else:
+			# Single column layout: process entire width
+			pagesegmenter.find_words(0, pagesegmenter.cols)
+			word_coordinates_array = pagesegmenter.word_array
+			pagesegmenter.store_words(0, words_dir)
 
 		# Reshaping word_cordinate array into n*1*4 array = [x1,y1, x2, y2] - top left and bottom right
 		# Refer to open cv for co-ordinates convention
@@ -284,39 +295,53 @@ class pagesegmenter:
 		cv2.imshow('t',im)
 		cv2.waitKey()
 
-	def get_letter_coordinates(self):
+	def get_letter_coordinates(self, two_column_layout=False):
 		
-		# Making words and letter directories
+		# Making temporary words and letter directories
+		words_dir = './tmp_words'
+		letters_dir = './tmp_letters'
+		
 		try:
-			shutil.rmtree('./words')
-			shutil.rmtree('./letters')
+			shutil.rmtree(words_dir)
+			shutil.rmtree(letters_dir)
 		except:
-			print("Creating Directories: Words, letters")
+			print("Creating Directories: tmp_words, tmp_letters")
 		
-		os.mkdir('./words')
-		os.mkdir('./letters')
-		word_array = self.get_word_coordinates()
-		#no_words = len(os.listdir('./words')) - 1
-		no_words = 10
+		os.mkdir(words_dir)
+		os.mkdir(letters_dir)
+		word_array = self.get_word_coordinates(two_column_layout=two_column_layout, words_dir=words_dir)
+		
+		# Get actual number of words created
+		no_words = len([f for f in os.listdir(words_dir) if f.endswith('.png')])
+		print(f"Found {no_words} words to process")
+		
 		local_letter_coordinates = []
 		for index in range(no_words):
-			word_img = './words/' + str(index) + '.png'
-			word = letter_finder(word_img)
-			y = word.find_line()
-			word.remove_line(y)
-			word.find_letters(0,0,word.cols,word.final_image.shape[0])
-			word.store_cropped_letters(index)
-			local_letter_coordinates.append(word.letter_matrix)
+			word_img = words_dir + '/' + str(index) + '.png'
+			if not os.path.exists(word_img):
+				print(f"Warning: {word_img} does not exist, skipping")
+				continue
+			try:
+				word = letter_finder(word_img)
+				y = word.find_line()
+				word.remove_line(y)
+				word.find_letters(0,0,word.cols,word.final_image.shape[0])
+				word.store_cropped_letters(index, letters_dir)
+				local_letter_coordinates.append(word.letter_matrix)
+			except Exception as e:
+				print(f"Error processing word {index}: {e}")
+				continue
 
 		# Converting letters into global coordinate frame
 		# Structure of letter_coordinates = n * m * 4
 		# n = number of words
 		# m = number of letters in the words
 		# 4 = top left and bottom right corner of box
-		## Tmp remove the following line
 		letter_coordinates = []
-		for word_index in range(no_words):
+		for word_index in range(len(local_letter_coordinates)):
 			letter_coordinates.append([])
+			if word_index >= len(word_array):
+				break
 			for letter_index in range(len(local_letter_coordinates[word_index])-1):
 				x_top_left = int(0.1 * 0.75 * local_letter_coordinates[word_index][letter_index] + word_array[word_index][0])
 				y_top_left = 0 + word_array[word_index][1]
@@ -324,6 +349,9 @@ class pagesegmenter:
 				y_bottom_right = word_array[word_index][3]
 
 				letter_coordinates[word_index].append([x_top_left,y_top_left,x_bottom_right,y_bottom_right])
+		
+		# Note: Cleanup disabled for inspection - tmp_words and tmp_letters are preserved
+		print(f"Segmentation complete. Word images saved in: {words_dir}")
 				
 		return letter_coordinates	
 		
@@ -350,17 +378,33 @@ class pagesegmenter:
 		cv2.waitKey()
 
 
-	def get_letters_for_classification(self,letter_array,letter_dir):
+	def get_letters_for_classification(self,letter_array,letter_dir='./tmp_letters', cleanup=True):
 		## returns an array of letter image N*32*32*3 to CNN for classification
 		x_test = []	
 		for word_index in range(0,len(letter_array)):
 			for letter_index in range(0,len(letter_array[word_index])):
 				## letter = img[y1:y2, x1:x2]
-				letter = cv2.imread(letter_dir + str(word_index) + str(letter_index) + '.png')
+				letter_path = letter_dir + '/' + str(word_index) + '-' + str(letter_index) + '.png'
+				if not os.path.exists(letter_path):
+					print(f"Warning: Letter image {letter_path} not found, skipping")
+					continue
+				letter = cv2.imread(letter_path)
+				if letter is None:
+					print(f"Warning: Could not read {letter_path}, skipping")
+					continue
 				letter = cv2.resize(letter,(32,32))
 				x_test.append(letter)
 	
 		x_test = np.asarray(x_test)
+		
+		# Cleanup temporary letters directory after loading
+		if cleanup:
+			try:
+				shutil.rmtree(letter_dir)
+				print("Cleaned up tmp_letters directory")
+			except Exception as e:
+				print(f"Warning: Could not cleanup tmp_letters: {e}")
+		
 		return x_test
 
 # To read image

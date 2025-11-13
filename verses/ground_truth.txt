@@ -1,0 +1,6 @@
+# Ground Truth for Test Images
+# Format: image_filename,word1,word2,word3,...
+# Each line contains the image filename followed by comma-separated ITRANS words
+
+# Image 1: Bhagavad Gita Chapter 1, Verse 1
+6.jpg,dhRRitaraaShTra,uvaaca,dharmakShetre,kurukShetre,samavetaa,yuyutsavaH,maamakaaH,paaNDavaashchaiva,kimakurvata,sa~njaya

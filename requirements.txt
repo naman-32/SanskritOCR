@@ -1,0 +1,27 @@
+# Sanskrit OCR Requirements
+# Author: Naman Goenka
+# Date: Dec 25th 2020
+
+# Core ML/DL frameworks
+tensorflow==2.16.2
+tf-keras
+keras
+
+# Computer Vision
+opencv-python==4.8.1.78
+
+# Data processing
+numpy==1.26.4
+pandas
+openpyxl
+
+# Text processing and transliteration
+python-Levenshtein
+indic-transliteration
+
+# Image processing
+Pillow
+
+# Optional: For better performance
+# scipy
+# scikit-learn

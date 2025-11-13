@@ -1,20 +1,30 @@
 ## Contains code for converting english to devanagari and vice versa
 ## Author : Avadesh
 ## Date : Dec 17th 2018
+## Modified: Dec 25th 2020 - Added lexical correction support
 
 import numpy as np
 import os 
 import sys
 import pandas
+from utils.lexicalcorrector import LexicalCorrector
 
 class textconverter:
 	
-	def __init__(self, dir_to_xlsx):
+	def __init__(self, dir_to_xlsx, use_lexical_correction=False, dictionary_path=None, max_distance=2):
 		self.itransdict = pandas.read_excel(dir_to_xlsx + 'itransdict.xlsx') 
 		self.english_input = self.itransdict['INPUT'].values
 		self.input_type = self.itransdict['INPUT-TYPE'].values
 		self.unicodemap = self.itransdict['#sanskrit'].values
 		self.virama = self.unicodemap[np.where(self.english_input == 'virama')]
+		
+		# Lexical correction support
+		self.use_lexical_correction = use_lexical_correction
+		self.lexical_corrector = None
+		
+		if use_lexical_correction and dictionary_path:
+			self.lexical_corrector = LexicalCorrector(dictionary_path, max_distance)
+			print(f"✓ Lexical correction enabled (max_distance={max_distance})")
 
 	def englishtosanskritunicode(self, word):
 
@@ -109,6 +119,10 @@ class textconverter:
 			word = ''.join(itransarray[:len(letter_array[word_index])])	
 			word_array.append(word)
 			itransarray = itransarray[len(letter_array[word_index]):]
+		
+		# Apply lexical correction if enabled
+		if self.use_lexical_correction and self.lexical_corrector:
+			word_array, corrections_info = self.lexical_corrector.correct_words(word_array, verbose=True)
 				
 		return word_array
 
