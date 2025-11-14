@@ -33,6 +33,12 @@
 - Per-image and aggregate metrics
 - Script: `evaluate_wer_on_images.py`
 
+**6. CNN + BiLSTM Implementation**
+- Implemented sequence-based character recognition with BiLSTM for contextual modeling
+- Trained on augmented dataset from Bhagavad Gita
+- Results comparable to CNN baseline; sequential context did not improve accuracy further
+- Module: `gita_dataset_augmentation/cnn_bilstm_model.py`
+
 #### Course System Issues: 
 - Added automatic cleanup of temporary directories (tmp_words, tmp_letters)
 - Added gitignore and requirements file for more reproducable setup
